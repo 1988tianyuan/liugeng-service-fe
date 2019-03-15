@@ -1,4 +1,4 @@
 export default {
-  devUrl: 'http://alicloud:8080',
+  devUrl: 'http://localhost:8080',
   prodUrl: 'http://localhost/tomcat'
 }

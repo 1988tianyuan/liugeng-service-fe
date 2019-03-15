@@ -1,7 +1,7 @@
 {
-  "name": "vue-cli-demo",
+  "name": "liugeng-service-fe",
   "version": "1.0.0",
-  "description": "vue-cli demo for SPA",
+  "description": "liugeng-service-fe",
   "author": "liugeng <liu.geng@navercorp.com>",
   "private": true,
   "scripts": {

@@ -23,11 +23,13 @@
         <el-button @click="visible=true" class="new_user">新建用户</el-button>
         <el-main>
           <el-table :data="users">
-            <el-table-column prop="name" label="姓名" width="250"></el-table-column>
-            <el-table-column prop="account" label="账号" width="250"></el-table-column>
-            <el-table-column prop="info" label="信息"></el-table-column>
+            <el-table-column prop="name" label="姓名" width="250">
+            </el-table-column>
+            <el-table-column prop="account" label="账号" width="250">
+            </el-table-column>
+            <el-table-column prop="info" label="信息">
+            </el-table-column>
           </el-table>
-
         </el-main>
       </el-container>
     </el-container>
@@ -56,18 +58,22 @@
     <el-dialog :visible.sync="createdVisible" title="创建结果">
       {{ createdResult }}
     </el-dialog>
+    <el-dialog :visible.sync="errorVisible" title="异常">
+      {{ errorMsg }}
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import pubProps from '../properties/pubProps'
+import router from '../router/router'
 
 export default {
   inject: ['reload'],
   data: function () {
     return {
-      users: null,
+      users: [],
       visible: false,
       form: {
         name: '',
@@ -77,14 +83,25 @@ export default {
       },
       createdVisible: false,
       createdResult: '',
+      errorVisible: false,
+      errorMsg: '',
       userUrl: process.env.NODE_ENV === 'production' ? pubProps.prodUrl + '/user' : pubProps.devUrl + '/user'
     }
   },
   mounted () {
+    let self = this
     axios.get(this.userUrl)
-      .then(
-        response => (this.users = response.data)
-      )
+      .then(function (response) {
+        self.users = response.data.data
+      }).catch(function (error) {
+        let errorResp = error.response
+        self.errorMsg = errorResp.data.msg
+        self.errorVisible = true
+        alert(self.errorMsg)
+        if (errorResp.status === 403) {
+          router.push('/login')
+        }
+      })
   },
   methods: {
     onSubmit () {
