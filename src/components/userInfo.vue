@@ -90,14 +90,13 @@ export default {
   },
   mounted () {
     let self = this
+    axios.defaults.withCredentials = true
     axios.get(this.userUrl)
       .then(function (response) {
         self.users = response.data.data
       }).catch(function (error) {
         let errorResp = error.response
-        self.errorMsg = errorResp.data.msg
-        self.errorVisible = true
-        alert(self.errorMsg)
+        self.errorAlert(errorResp.data.msg)
         if (errorResp.status === 403) {
           router.push('/login')
         }
@@ -127,9 +126,12 @@ export default {
           }
         ).catch(function (error) {
           self.createdVisible = true
-          self.createdResult = '创建失败啦！'
+          self.createdResult = '创建失败'
           console.log('出错啦：' + error)
         })
+    },
+    errorAlert (msg) {
+      this.$alert(msg, '错误')
     }
   }
 }
@@ -145,7 +147,7 @@ export default {
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
-    line-height: 60px;
+    line-height: 20px;
   }
 
   .el-aside {
@@ -160,7 +162,7 @@ export default {
     background-color: #E9EEF3;
     color: #333;
     text-align: center;
-    line-height: 160px;
+    line-height: 60px;
   }
 
   .el-container {
